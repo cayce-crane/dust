@@ -7,6 +7,7 @@ Rooms are simple containers that has no location of their own.
 
 from evennia import DefaultRoom
 import random
+from evennia import TICKER_HANDLER
 
 
 class Room(DefaultRoom):
