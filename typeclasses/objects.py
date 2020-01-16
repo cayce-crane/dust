@@ -169,7 +169,7 @@ class Object(DefaultObject):
             key = con.get_display_name(looker)
             if con.destination:
                 exits.append(key)
-            elif con in Character.objects.all():
+            elif con.is_typeclass(Character):
                 users.append("|c%s|n" % key)
             else:
                 things[key].append(con)
