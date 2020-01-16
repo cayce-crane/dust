@@ -32,7 +32,7 @@ class Character(ClothedCharacter):
 
     """
     def at_object_creation(self):
-        self.attributes.add("idlepose", "standing here.")
+        self.attributes.add("idlepose", "is standing here.")
 
     def at_post_puppet(self, **kwargs):
         self.msg("\nYou become |c%s|n.\n" % self.name)
