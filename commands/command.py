@@ -79,6 +79,23 @@ class CmdNpc(Command):
         npc.execute_cmd(self.cmdname)
         caller.msg("You told %s to do '%s'." % (npc.key, self.cmdname))
 
+class CmdIdle(Command):
+
+    key = "@idle"
+    help_category = "mush"
+
+    def parse(self):
+        idlepose = None
+        if "=" in self.args:
+            idlepose = self.args.rsplit("=")
+        self.idlepose = idlepose
+
+    def func(self):
+        caller = self.caller
+        if not self.cmdname:
+            caller.msg("Usage: @idle = <idle pose>")
+        caller.db.idlepose = self.idlepose
+        caller.msg("Your idle pose is now '%s is %s" % (caller.key, self.idlepose))
 
 
 # -------------------------------------------------------------

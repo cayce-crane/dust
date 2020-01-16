@@ -32,18 +32,15 @@ class Room(DefaultRoom):
             if con.destination:
                 exits.append(key)
             elif con.is_typeclass(Character):
-                users.append("|c%s|n" % key)
+                users.append("|c%s|n is %s" % (key, con.attributes.get("idlepose")))
             else:
                 things[key].append(con)
         string = "|c%s|n\n" % self.get_display_name(looker)
         desc = self.db.desc
         if desc:
             string += "%s" % desc
-        if exits:
-            string += "\n|wExits:|n " + ', '.join(exits)
-        # this doesn't quite work yet
         if users:
-            string += "\n|wStanding here is |n" + ', '.join(users)
+            string += "\n|wStanding here is: |n" + ', '.join(users)
         if things:
             thing_strings = []
             for key, itemlist in sorted(things.items()):
@@ -54,6 +51,8 @@ class Room(DefaultRoom):
                     key = [item.get_numbered_name(nitem, looker, key=key)[1] for item in itemlist][0]
                 thing_strings.append(key)
             string += "\n|wYou see:|n " + ', '.join(thing_strings)
+        if exits:
+            string += "\n|wExits:|n " + ', '.join(exits)
         return string
 
     def at_look(self, target, **kwargs):
@@ -102,6 +101,5 @@ class AmbientRoom(Room):
         any arguments and keyword arguments (hence the *args, **kwargs
         even though we don't actually use them in this example)
         """
-        if random.random() < 0.02:
-            # only update 20 % of the time
+        if random.random() < 0.005:
             self.msg_contents("|w%s|n" % random.choice(AMBIENCE_STRINGS))
