@@ -40,7 +40,7 @@ class Room(DefaultRoom):
         if desc:
             string += "%s" % desc
         if users:
-            string += "\n|n" + ', '.join(users)
+            string += "\n|n" + ' '.join(users)
         if things:
             thing_strings = []
             for key, itemlist in sorted(things.items()):

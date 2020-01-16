@@ -95,7 +95,7 @@ class CmdIdle(Command):
         if not self.cmdname:
             caller.msg("Usage: @idle = <idle pose>")
         caller.db.idlepose = self.idlepose
-        caller.msg("Your idle pose is now '%s is %s" % (caller.key, self.idlepose))
+        caller.msg("Your idle pose is now '%s is %s'" % (caller.key, self.idlepose))
 
 
 # -------------------------------------------------------------
