@@ -87,7 +87,7 @@ class CmdIdle(Command):
     def parse(self):
         idlepose = None
         if "=" in self.args:
-            idlepose = self.args.rsplit("=")
+            _, idlepose = [part.strip() for part in self.args.rsplit("=")]
         self.idlepose = idlepose
 
     def func(self):
