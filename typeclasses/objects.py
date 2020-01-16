@@ -11,6 +11,7 @@ inheritance.
 
 """
 from evennia import DefaultObject
+from typeclasses.characters import Character
 from collections import defaultdict
 
 
@@ -168,7 +169,7 @@ class Object(DefaultObject):
             key = con.get_display_name(looker)
             if con.destination:
                 exits.append(key)
-            elif con.access(con, "npc"):
+            elif con in Character.objects.all():
                 users.append("|c%s|n" % key)
             else:
                 things[key].append(con)
