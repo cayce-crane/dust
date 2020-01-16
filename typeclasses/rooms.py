@@ -32,7 +32,7 @@ class Room(DefaultRoom):
             if con.destination:
                 exits.append(key)
             elif con.is_typeclass(Character):
-                users.append("|c%s|n is %s" % (key, con.attributes.get("idlepose")))
+                users.append("|c%s|n is %s" % (key, con.db.idlepose))
             else:
                 things[key].append(con)
         string = "|c%s|n\n" % self.get_display_name(looker)
@@ -40,7 +40,7 @@ class Room(DefaultRoom):
         if desc:
             string += "%s" % desc
         if users:
-            string += "\n|wStanding here is: |n" + ', '.join(users)
+            string += "\n|n" + ', '.join(users)
         if things:
             thing_strings = []
             for key, itemlist in sorted(things.items()):
