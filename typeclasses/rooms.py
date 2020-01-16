@@ -40,10 +40,10 @@ class Room(DefaultRoom):
         if desc:
             string += "%s" % desc
         if exits:
-            string += "\n|wExits:|n " + list_to_string(exits)
+            string += "\n|wExits:|n " + ''.join(exits)
         # this doesn't quite work yet
         if users:
-            string += "\n|wStanding here is |n" + list_to_string(users)
+            string += "\n|wStanding here is |n" + ''.join(users)
         if things:
             thing_strings = []
             for key, itemlist in sorted(things.items()):
@@ -53,7 +53,7 @@ class Room(DefaultRoom):
                 else:
                     key = [item.get_numbered_name(nitem, looker, key=key)[1] for item in itemlist][0]
                 thing_strings.append(key)
-            string += "\n|wYou see:|n " + list_to_string(thing_strings)
+            string += "\n|wYou see:|n " + ''.join(thing_strings)
         return string
 
     def at_look(self, target, **kwargs):
