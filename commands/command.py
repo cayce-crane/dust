@@ -35,15 +35,15 @@ class Command(BaseCommand):
 
 class CmdCreateNpc(Command):
 
-    key = "+createnpc"
-    aliases = ["+createNPC"]
+    key = "@createnpc"
+    aliases = ["@createNPC"]
     locks = "call:not perm(nonpcs)"    
     help_category = "mush"
 
     def func(self):
         caller = self.caller
         if not self.args:
-            caller.msg("Usage: +createnpc: <name>")
+            caller.msg("Usage: @createnpc: <name>")
             return
         name = self.args.strip().capitalize()
         npc = create_object("characters.Character",
@@ -56,7 +56,7 @@ class CmdCreateNpc(Command):
 
 class CmdNpc(Command):
     
-    key = "+npc"
+    key = "@npc"
     locks = "call:not perm(nonpcs)"
     help_category = "mush"
 
@@ -69,7 +69,7 @@ class CmdNpc(Command):
     def func(self):
         caller = self.caller
         if not self.cmdname:
-            caller.msg("Usage: +npc <name> = <command>")
+            caller.msg("Usage: @npc <name> = <command>")
         npc = caller.search(self.name)
         if not npc:
             return

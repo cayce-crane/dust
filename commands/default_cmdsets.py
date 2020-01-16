@@ -38,6 +38,7 @@ class CharacterCmdSet(default_cmds.CharacterCmdSet):
         #
         self.add(command.CmdCreateNpc())
         self.add(command.CmdNpc())
+        self.add(command.CmdIdle())
         self.add(ClothedCharacterCmdSet())
 
 
