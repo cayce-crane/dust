@@ -11,8 +11,6 @@ inheritance.
 
 """
 from evennia import DefaultObject
-from typeclasses.characters import Character
-from collections import defaultdict
 
 
 class Object(DefaultObject):
