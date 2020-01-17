@@ -173,7 +173,7 @@ class RandomDescObject(Object):
 
     def build_random_desc(self, desc, rand_strings):
         # randomly get the index for one of the descriptions
-        rand_string = random.randint(0, len(rand_strings) - 1)
+        rand_string = rand_strings[random.randint(0, len(rand_strings) - 1)]
         # set this description, with the random extra
         self.db.desc = desc + " " + rand_string
 
