@@ -11,6 +11,7 @@ inheritance.
 
 """
 from evennia import DefaultObject
+import random
 
 
 class Object(DefaultObject):
@@ -160,3 +161,37 @@ class Object(DefaultObject):
      """
     pass
 
+class RandomDescObject(Object):
+    """
+    This object displays a different appearance with every 'look'.
+    """
+    def at_object_creation(self):
+        """Called when object is created."""
+        super().at_object_creation()
+
+        self.locks.add("get:false()")
+
+    def build_random_desc(self, desc, rand_strings):
+        # randomly get the index for one of the descriptions
+        rand_string = random.randint(0, len(rand_strings) - 1)
+        # set this description, with the random extra
+        self.db.desc = desc + " " + rand_string
+
+class adScreen(RandomDescObject):
+
+    def return_appearance(self, caller):
+        """
+        This hook is called by the look command to get the description
+        of the object. We overload it with our own version.
+        """
+        ad_strings = ["Across the screen, you see the fast-paced advertisement for |ba BLUE BOMBER NIK-STIX|n.",
+                      "The wail of a saxophone heralds the jingle for |ba Baxter's House of Neo-Blues.|n Now open.",
+                      "Here, the screen displays nothing more than snowy static. A moment's respite.",
+                      "The fourteen-colour rectangles of a tv-test screen indicate a broadcast chopped short."]
+
+        desc = (
+            "One of a trillion screens that disperses the nauseating slew of ever-present advertisement and authoritarian invasion of privacy."
+        )
+        self.build_random_desc(desc, ad_strings)
+        #show the user
+        return super().return_appearance(caller)

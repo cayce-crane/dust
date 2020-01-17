@@ -66,7 +66,7 @@ class Room(DefaultRoom):
     pass
 
 # These are ambiance strings
-AMBIENCE_STRINGS = (
+AMBIANCE_STRINGS = (
     "Off in the distance, the sirens of a private police-force wail, rising and fading.",
     "The whine of an electric tool sounds from somewhere nearby, then the crunch of cutting metal.",
     "For a moment, you catch the smell of distant street-grils, thick and oily.",
