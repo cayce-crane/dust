@@ -177,7 +177,7 @@ class RandomDescObject(Object):
         # set this description, with the random extra
         self.db.desc = desc + " " + rand_string
 
-class adScreen(RandomDescObject):
+class AdScreen(RandomDescObject):
 
     def return_appearance(self, caller):
         """
