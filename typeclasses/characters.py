@@ -8,6 +8,7 @@ creation commands.
 
 """
 from evennia import DefaultCharacter
+from evennia import DefaultObject
 from evennia import default_cmds
 from evennia.commands.default.muxcommand import MuxCommand
 from evennia.utils import list_to_string
