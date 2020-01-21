@@ -120,7 +120,6 @@ class CmdChar(Command):
 
         caller = self.caller
         args = self.args.strip()
-        switches = self.switches
 
         if self.lhs:
             key = self.lhs.strip().lower()
