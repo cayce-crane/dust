@@ -7,7 +7,7 @@ Commands describe the input the account can do to the game.
 
 from evennia import Command as BaseCommand
 from evennia import create_object
- from evennia import default_cmds
+from evennia import default_cmds
 
 
 class Command(BaseCommand):
