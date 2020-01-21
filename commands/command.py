@@ -7,7 +7,7 @@ Commands describe the input the account can do to the game.
 
 from evennia import Command as BaseCommand
 from evennia import create_object
-from evennia import default_cmds
+from evennia.commands.default.muxcommand import MuxCommand
 
 
 class Command(BaseCommand):
@@ -33,6 +33,7 @@ class Command(BaseCommand):
 
     pass
 
+
 class CmdCreateNpc(Command):
 
     key = "@createnpc"
@@ -46,13 +47,12 @@ class CmdCreateNpc(Command):
             caller.msg("Usage: @createnpc: <name>")
             return
         name = self.args.strip().capitalize()
-        npc = create_object("characters.Character",
-            key=name,
-            location=caller.location,
-            locks="edit:id(%i) and perm(Builders);call:false()" % caller.id)
+        npc = create_object("characters.Character", key=name, location=caller.location,
+                            locks="edit:id(%i) and perm(Builders);call:false()" % caller.id)
         message = "%s created the NPC '%s'."
         caller.msg(message % ("You", name))
         caller.location.msg_contents(message % (caller.key, name), exclude=caller)
+
 
 class CmdNpc(Command):
     
@@ -79,6 +79,7 @@ class CmdNpc(Command):
         npc.execute_cmd(self.cmdname)
         caller.msg("You told %s to do '%s'." % (npc.key, self.cmdname))
 
+
 class CmdIdle(Command):
 
     key = "@idle"
@@ -98,9 +99,9 @@ class CmdIdle(Command):
         caller.msg("Your idle pose is now '%s %s'" % (caller.key, self.idlepose))
 
 
-class CmdChar(default_cmds.MuxCommand):
+class CmdChar(MuxCommand):
 
-    '''
+    """
     Command to control character specifics; nakeds, description, idle poses, etc.
 
     Usage:
@@ -110,7 +111,7 @@ class CmdChar(default_cmds.MuxCommand):
         @char <naked part> = <description>       : Assign/overwrite naked
         @char <naked part> =                     : clear naked for this part
 
-    '''
+    """
 
     key = "@char"
     locks = "cmd:all()"
@@ -134,7 +135,7 @@ class CmdChar(default_cmds.MuxCommand):
                 # This will get expanded later as we add/refactor commands to be
                 # part of the @char commandset.
                 caller.msg("No naked part %s." % key)
-        elif args.lower() == "nakeds":
+        elif args.lower() == "nakeds" and not self.rhs:
             nakeds_string = ''
             for key, value in self.db.nakeds.items():
                 nakeds_string += ("%s: %s\n" % key, value)

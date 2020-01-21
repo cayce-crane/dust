@@ -16,7 +16,7 @@ own cmdsets by inheriting from them or directly from `evennia.CmdSet`.
 
 from evennia import default_cmds
 from commands import command
-from typeclasses.characters import  ClothedCharacterCmdSet
+from commands import clothing_commands
 
 
 class CharacterCmdSet(default_cmds.CharacterCmdSet):
@@ -39,7 +39,7 @@ class CharacterCmdSet(default_cmds.CharacterCmdSet):
         self.add(command.CmdCreateNpc())
         self.add(command.CmdNpc())
         self.add(command.CmdIdle())
-        self.add(ClothedCharacterCmdSet())
+        self.add(clothing_commands.ClothedCharacterCmdSet())
         self.add(command.CmdChar())
 
 
