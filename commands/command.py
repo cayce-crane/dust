@@ -123,7 +123,7 @@ class CmdChar(default_cmds.MuxCommand):
 
         if self.lhs:
             key = self.lhs.strip().lower()
-            if key in caller.attributes.nakeds:
+            if key in caller.db.nakeds:
                 if self.rhs:
                     caller.db.nakeds[key] = self.rhs
                     caller.msg("Naked description for %s set." % key)
