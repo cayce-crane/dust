@@ -7,7 +7,7 @@ Commands describe the input the account can do to the game.
 
 from evennia import Command as BaseCommand
 from evennia import create_object
-# from evennia import default_cmds
+ from evennia import default_cmds
 
 
 class Command(BaseCommand):
@@ -98,7 +98,7 @@ class CmdIdle(Command):
         caller.msg("Your idle pose is now '%s %s'" % (caller.key, self.idlepose))
 
 
-class CmdChar(MuxCommand):
+class CmdChar(default_cmds.MuxCommand):
 
     '''
     Command to control character specifics; nakeds, description, idle poses, etc.
