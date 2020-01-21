@@ -98,6 +98,49 @@ class CmdIdle(Command):
         caller.msg("Your idle pose is now '%s %s'" % (caller.key, self.idlepose))
 
 
+class CmdChar(Command):
+
+    '''
+    Command to control character specifics; nakeds, description, idle poses, etc.
+
+    Usage:
+        only nakeds for now.
+
+        @char nakeds                                    : list nakeds
+        @char <naked part> = <description>       : Assign/overwrite naked
+        @char <naked part> =                     : clear naked for this part
+
+    '''
+
+    key = "@char"
+    locks = "cmd:all()"
+    help_category = "Character"
+
+    def func(self):
+
+        caller = self.caller
+        args = self.args.strip()
+        switches = self.switches
+
+        if self.lhs:
+            key = self.lhs.strip().lower()
+            if key in caller.attributes.nakeds:
+                if self.rhs:
+                    caller.db.nakeds[key] = self.rhs
+                    caller.msg("Naked description for %s set." % key)
+                else:
+                    caller.db.nakeds[key] = ""
+                    caller.msg("Naked description for %s cleared." % key)
+            else:
+                # This will get expanded later as we add/refactor commands to be
+                # part of the @char commandset.
+                caller.msg("No naked part %s." % key)
+        elif args.lower() == "nakeds":
+            nakeds_string = ''
+            for key, value in self.db.nakeds.items():
+                nakeds_string += ("%s: %s\n" % key, value)
+            caller.msg("Naked descriptions:\n%s" % nakeds_string)
+
 # -------------------------------------------------------------
 #
 # The default commands inherit from
