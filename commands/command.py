@@ -126,7 +126,7 @@ class CmdChar(MuxCommand):
             nakeds_string = ''
             for key, value in caller.db.nakeds.items():
                 nakeds_string += ("%s: %s\n" % (key, value))
-            caller.msg("Naked descriptions:\n%s" % nakeds_string)
+            caller.msg("\n\nNaked descriptions:\n\n%s" % nakeds_string)
         elif self.lhs:
             key = self.lhs.strip().lower()
             if key in caller.db.nakeds:
