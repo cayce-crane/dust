@@ -78,7 +78,7 @@ class Character(DefaultCharacter):
             naked_dict = self.db.nakeds
             for key, value in naked_dict.items():
                 string += '\n\n' if key == 'groin' else ''
-                string += ('%s ' % value) if value else ''
+                string += ('|W%s|n ' % value) if value else ''
         # Append worn clothes.
         if worn_string_list:
             string += "|/|/%s is wearing %s." % (self, list_to_string(worn_string_list))

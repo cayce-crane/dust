@@ -1,5 +1,5 @@
 
-
+from evennia import DefaultObject 
 
 # Options start here.
 
