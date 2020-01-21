@@ -98,7 +98,7 @@ class CmdIdle(Command):
         caller.msg("Your idle pose is now '%s %s'" % (caller.key, self.idlepose))
 
 
-class CmdChar(Command):
+class CmdChar(MuxCommand):
 
     '''
     Command to control character specifics; nakeds, description, idle poses, etc.
