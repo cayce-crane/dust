@@ -1,5 +1,7 @@
 
-from evennia import DefaultObject 
+from evennia import DefaultObject
+from evennia.utils import list_to_string
+from config.configlists import CLOTHING_MESSAGE_TYPES, NAKEDS_LIST
 
 # Options start here.
 
@@ -34,9 +36,6 @@ CLOTHING_TYPE_AUTOCOVER = {
     "fullbody": ["undershirt", "underpants"],
     "shoes": ["socks"],
 }
-
-CLOTHING_MESSAGES = { "wear":"", "owear":"", "remove":"", "oremove":"", "desc":"", "worn":"", "tease":"", "otease":"",
-                      "dtease":"" }
 
 # HELPER FUNCTIONS START HERE
 
@@ -138,39 +137,19 @@ def single_type_count(clothes_list, type):
 class Clothing(DefaultObject):
 
     def at_object_creation(self):
-        self.db.messages = CLOTHING_MESSAGES
+        self.db.messages = {message: "" for message in CLOTHING_MESSAGE_TYPES}
 
-    def wear(self, wearer, wearstyle, quiet=False):
+    def wear(self, wearer):
         """
         Sets clothes to 'worn' and optionally echoes to the room.
         Args:
             wearer (obj): character object wearing this clothing object
-            wearstyle (True or str): string describing the style of wear or True for none
-        Kwargs:
-            quiet (bool): If false, does not message the room
-        Notes:
-            Optionally sets db.worn with a 'wearstyle' that appends a short passage to
-            the end of the name  of the clothing to describe how it's worn that shows
-            up in the wearer's desc - I.E. 'around his neck' or 'tied loosely around
-            her waist'. If db.worn is set to 'True' then just the name will be shown.
         """
         # Set clothing as worn
-        self.db.worn = wearstyle
-        # Auto-cover appropirate clothing types, as specified above
-        to_cover = []
-        if self.db.clothing_type and self.db.clothing_type in CLOTHING_TYPE_AUTOCOVER:
-            for garment in get_worn_clothes(wearer):
-                if (
-                        garment.db.clothing_type
-                        and garment.db.clothing_type in CLOTHING_TYPE_AUTOCOVER[self.db.clothing_type]
-                ):
-                    to_cover.append(garment)
-                    garment.db.covered_by = self
-        # Return if quiet
-        if quiet:
-            return
+        self.db.worn = True
+
         # Echo a message to the room
-        message = "%s puts on %s" % (wearer, self.name)
+        message = "%s %s" % (wearer, self.db.messages['owear'])
         if wearstyle is not True:
             message = "%s wears %s %s" % (wearer, self.name, wearstyle)
         if to_cover:

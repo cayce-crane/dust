@@ -10,6 +10,7 @@ creation commands.
 from evennia import DefaultCharacter
 from evennia.utils import list_to_string
 from typeclasses.clothing import get_worn_clothes
+from config.configlists import NAKEDS_LIST
 
 
 
@@ -35,11 +36,7 @@ class Character(DefaultCharacter):
     """
     def at_object_creation(self):
         self.attributes.add("idlepose", "is standing here.")
-        naked_dict = {"head":"", "left-eye":"", "right-eye":"", "face":"", "neck":"", "left-shoulder":"",
-                      "right-shoulder":"", "chest":"", "back":"", "left-upperarm":"", "right-upperarm":"",
-                      "left-forearm":"", "right-forearm":"", "left-hand":"", "right-hand":"", "abdomen":"", "groin":"",
-                      "butt":"", "left-thigh":"", "right-thigh":"", "left-calf":"", "right-calf":"",
-                      "left-foot":"", "right-foot":""}
+        naked_dict = {naked: "" for naked in NAKEDS_LIST}
         self.attributes.add("nakeds", naked_dict)
 
     def return_appearance(self, looker):
