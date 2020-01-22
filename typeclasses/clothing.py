@@ -35,6 +35,8 @@ CLOTHING_TYPE_AUTOCOVER = {
     "shoes": ["socks"],
 }
 
+CLOTHING_MESSAGES = { "wear":"", "owear":"", "remove":"", "oremove":"", "desc":"", "worn":"", "tease":"", "otease":"",
+                      "dtease":"" }
 
 # HELPER FUNCTIONS START HERE
 
@@ -134,6 +136,10 @@ def single_type_count(clothes_list, type):
 
 
 class Clothing(DefaultObject):
+
+    def at_object_creation(self):
+        self.db.messages = CLOTHING_MESSAGES
+
     def wear(self, wearer, wearstyle, quiet=False):
         """
         Sets clothes to 'worn' and optionally echoes to the room.

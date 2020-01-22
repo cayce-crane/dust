@@ -71,13 +71,13 @@ class Character(DefaultCharacter):
             elif garment.db.worn:
                 worn_string_list.append("%s %s" % (garment.name, garment.db.worn))
         if desc:
-            string += "%s\n" % desc
+            string += "%s" % desc
         # Append nakeds
         # TODO cover if clothes worn
         if self.db.nakeds:
             naked_dict = self.db.nakeds
             for key, value in naked_dict.items():
-                string += '\n' if (key == 'groin' or key == 'head' or key == 'left-shoulder') and value != ''  else ''
+                string += '\n' if (key == 'head' or key == 'left-shoulder' or key == 'groin') else ''
                 string += ('|W%s|n ' % value) if value else ''
         # Append worn clothes.
         if worn_string_list:
