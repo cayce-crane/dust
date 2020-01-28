@@ -289,7 +289,7 @@ class ClothedCharacterCmdSet(default_cmds.CharacterCmdSet):
         self.add(CmdDrop())
         self.add(CmdInventory())
         self.add(CmdSetWorn())
-        self.ad(CmdCoveragePlus())
+        self.add(CmdCoveragePlus())
 
     pass
 
