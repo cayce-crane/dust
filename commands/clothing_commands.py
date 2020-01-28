@@ -147,7 +147,7 @@ class CmdSetWorn(MuxCommand):
             return
 
         if self.lhs:
-            clothing = self.caller.search(self.lhs, candidate=self.caller.contents)
+            clothing = self.caller.search(self.lhs, candidates=self.caller.contents)
             if not clothing:
                 self.caller.msg("Thing to remove must be carried or worn.")
                 return
