@@ -158,7 +158,7 @@ class CmdSetWorn(MuxCommand):
 
 class CmdCoveragePlus(MuxCommand):
 
-    key = "@coverage"
+    key = "@coverage+"
 
     def func(self):
 
