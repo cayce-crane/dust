@@ -153,6 +153,7 @@ class CmdSetWorn(MuxCommand):
                 return
             if self.rhs:
                 clothing.db.messages['worn'] = self.rhs
+                caller.msg("Worn message for %s set.", clothing.name)
 
 
 class CmdGive(MuxCommand):
