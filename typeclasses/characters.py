@@ -76,7 +76,7 @@ class Character(DefaultCharacter):
 
         worn_set = set()
 
-        for naked, clothing in worn.items:
+        for naked, clothing in worn.items():
             if len(clothing) != 0:
                 worn_set.add(naked)
 

@@ -135,6 +135,26 @@ class CmdDrop(MuxCommand):
         obj.at_drop(caller)
 
 
+class CmdSetWorn(MuxCommand):
+
+    key = '@worn'
+
+    def func(self):
+
+        caller = self.caller
+        if not self.args:
+            caller.msg("Need to provide item and message.")
+            return
+
+        if self.lhs:
+            clothing = self.caller.search(self.lhs, candidate=self.caller.contents)
+            if not clothing:
+                self.caller.msg("Thing to remove must be carried or worn.")
+                return
+            if self.rhs:
+                clothing.db.messages['worn'] = self.rhs
+
+
 class CmdGive(MuxCommand):
     """
     give away something to someone
