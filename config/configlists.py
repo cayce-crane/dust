@@ -8,7 +8,7 @@ NAKEDS_LIST = ['head', 'left-eye', 'right-eye', 'face', 'neck', 'left-shoulder',
 
 # The different types of clothing messages
 CLOTHING_MESSAGE_TYPES = ['wear', 'owear', 'remove', 'oremove', 'toggle1', 'otoggle1', 'toggle2', 'otoggle2',
-                          'worn', 'tease', 'otease', 'dtease']
+                          'worn', 'worntoggled', 'tease', 'otease', 'dtease']
 
 # These are ambience strings for indoor rooms in the Dirge sector
 DIRGE_INDOOR_AMBIENCE_STRINGS = (

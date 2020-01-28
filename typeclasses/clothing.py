@@ -3,68 +3,8 @@ from evennia import DefaultObject
 from evennia.utils import list_to_string
 from config.configlists import CLOTHING_MESSAGE_TYPES, NAKEDS_LIST
 
-# Options start here.
-
-
-# The rest of these options have to do with clothing types. Clothing types are optional,
-# but can be used to give better control over how different items of clothing behave. You
-# can freely add, remove, or change clothing types to suit the needs of your game and use
-# the options below to affect their behavior.
-
-# The order in which clothing types appear on the description. Untyped clothing or clothing
-# with a type not given in this list goes last.
-CLOTHING_TYPE_ORDER = [
-    "hat",
-    "jewelry",
-    "top",
-    "undershirt",
-    "gloves",
-    "fullbody",
-    "bottom",
-    "underpants",
-    "socks",
-    "shoes",
-    "accessory",
-]
-# What types of clothes will automatically cover what other types of clothes when worn.
-# Note that clothing only gets auto-covered if it's already worn when you put something
-# on that auto-covers it - for example, it's perfectly possible to have your underpants
-# showing if you put them on after your pants!
-CLOTHING_TYPE_AUTOCOVER = {
-    "top": ["undershirt"],
-    "bottom": ["underpants"],
-    "fullbody": ["undershirt", "underpants"],
-    "shoes": ["socks"],
-}
 
 # HELPER FUNCTIONS START HERE
-
-
-def order_clothes_list(clothes_list):
-    """
-    Orders a given clothes list by the order specified in CLOTHING_TYPE_ORDER.
-    Args:
-        clothes_list (list): List of clothing items to put in order
-    Returns:
-        ordered_clothes_list (list): The same list as passed, but re-ordered
-                                     according to the hierarchy of clothing types
-                                     specified in CLOTHING_TYPE_ORDER.
-    """
-    ordered_clothes_list = clothes_list
-    # For each type of clothing that exists...
-    for current_type in reversed(CLOTHING_TYPE_ORDER):
-        # Check each item in the given clothes list.
-        for clothes in clothes_list:
-            # If the item has a clothing type...
-            if clothes.db.clothing_type:
-                item_type = clothes.db.clothing_type
-                # And the clothing type matches the current type...
-                if item_type == current_type:
-                    # Move it to the front of the list!
-                    ordered_clothes_list.remove(clothes)
-                    ordered_clothes_list.insert(0, clothes)
-    return ordered_clothes_list
-
 
 def get_worn_clothes(character, exclude_covered=False):
     """
@@ -82,107 +22,48 @@ def get_worn_clothes(character, exclude_covered=False):
     """
     clothes_list = []
     for thing in character.contents:
-        # If uncovered or not excluding covered items
-        if not thing.db.covered_by or exclude_covered is False:
-            # If 'worn' is True, add to the list
-            if thing.db.worn:
-                clothes_list.append(thing)
-    # Might as well put them in order here too.
-    ordered_clothes_list = order_clothes_list(clothes_list)
-    return ordered_clothes_list
-
-
-def clothing_type_count(clothes_list):
-    """
-    Returns a dictionary of the number of each clothing type
-    in a given list of clothing objects.
-    Args:
-        clothes_list (list): A list of clothing items from which
-                             to count the number of clothing types
-                             represented among them.
-    Returns:
-        types_count (dict): A dictionary of clothing types represented
-                            in the given list and the number of each
-                            clothing type represented.
-    """
-    types_count = {}
-    for garment in clothes_list:
-        if garment.db.clothing_type:
-            type = garment.db.clothing_type
-            if type not in list(types_count.keys()):
-                types_count[type] = 1
-            else:
-                types_count[type] += 1
-    return types_count
-
-
-def single_type_count(clothes_list, type):
-    """
-    Returns an integer value of the number of a given type of clothing in a list.
-    Args:
-        clothes_list (list): List of clothing objects to count from
-        type (str): Clothing type to count
-    Returns:
-        type_count (int): Number of garments of the specified type in the given
-                          list of clothing objects
-    """
-    type_count = 0
-    for garment in clothes_list:
-        if garment.db.clothing_type:
-            if garment.db.clothing_type == type:
-                type_count += 1
-    return type_count
+        if thing.db.worn:
+            clothes_list.append(thing)
+    return clothes_list
 
 
 class Clothing(DefaultObject):
 
     def at_object_creation(self):
         self.db.messages = {message: "" for message in CLOTHING_MESSAGE_TYPES}
+        self.db.coverage = []
+        self.db.seethru = False
+        self.db.color = ""
 
     def wear(self, wearer):
         """
-        Sets clothes to 'worn' and optionally echoes to the room.
+        Sets clothes to 'worn' and echoes to the room.
         Args:
             wearer (obj): character object wearing this clothing object
         """
         # Set clothing as worn
         self.db.worn = True
 
+        covered_list = [naked for naked in self.db.coverage]
+        for covered in covered_list:
+            wearer.db.worn[covered].append(self)
+
         # Echo a message to the room
         message = "%s %s" % (wearer, self.db.messages['owear'])
-        if wearstyle is not True:
-            message = "%s wears %s %s" % (wearer, self.name, wearstyle)
-        if to_cover:
-            message = message + ", covering %s" % list_to_string(to_cover)
+        wearer.msg("%s" % self.db.messages['wear'])
         wearer.location.msg_contents(message + ".")
 
-    def remove(self, wearer, quiet=False):
+    def remove(self, wearer):
         """
         Removes worn clothes and optionally echoes to the room.
         Args:
             wearer (obj): character object wearing this clothing object
-        Kwargs:
-            quiet (bool): If false, does not message the room
         """
         self.db.worn = False
-        remove_message = "%s removes %s." % (wearer, self.name)
-        uncovered_list = []
 
-        # Check to see if any other clothes are covered by this object.
-        for thing in wearer.contents:
-            # If anything is covered by
-            if thing.db.covered_by == self:
-                thing.db.covered_by = False
-                uncovered_list.append(thing.name)
-        if len(uncovered_list) > 0:
-            remove_message = "%s removes %s, revealing %s." % (
-                wearer,
-                self.name,
-                list_to_string(uncovered_list),
-            )
-        # Echo a message to the room
-        if not quiet:
-            wearer.location.msg_contents(remove_message)
+        remove_message = "%s %s." % (wearer, self.db.message['oremove'])
+        wearer.msg("%s" % self.db.messages['remove'])
+        wearer.location.msg_contents(remove_message)
 
     def at_get(self, getter):
         """

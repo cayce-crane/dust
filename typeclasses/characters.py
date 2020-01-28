@@ -38,6 +38,8 @@ class Character(DefaultCharacter):
         self.attributes.add("idlepose", "is standing here.")
         naked_dict = {naked: "" for naked in NAKEDS_LIST}
         self.attributes.add("nakeds", naked_dict)
+        worn_dict = {naked: [] for naked in NAKEDS_LIST}
+        self.attributes.add("worn", worn_dict)
 
     def return_appearance(self, looker):
         """
@@ -58,29 +60,31 @@ class Character(DefaultCharacter):
         string = "|c%s|n\n" % self.get_display_name(looker)
         desc = self.db.desc
         worn_string_list = []
-        clothes_list = get_worn_clothes(self, exclude_covered=True)
+        clothes_list = get_worn_clothes(self)
         # Append worn, uncovered clothing to the description
-        for garment in clothes_list:
-            # If 'worn' is True, just append the name
-            if garment.db.worn is True:
-                worn_string_list.append(garment.name)
-            # Otherwise, append the name and the string value of 'worn'
-            elif garment.db.worn:
-                worn_string_list.append("%s %s" % (garment.name, garment.db.worn))
+        #for garment in clothes_list:
+        #    # If 'worn' is True, just append the name
+        #    if garment.db.worn is True:
+        #        worn_string_list.append(garment.name)
+        #    # Otherwise, append the name and the string value of 'worn'
+        #    elif garment.db.worn:
+        #        worn_string_list.append("%s %s" % (garment.name, garment.db.worn))
         if desc:
             string += "%s" % desc
-        # Append nakeds
-        # TODO cover if clothes worn
-        if self.db.nakeds:
-            naked_dict = self.db.nakeds
-            for key, value in naked_dict.items():
-                string += '\n' if (key == 'head' or key == 'left-shoulder' or key == 'groin') else ''
-                string += ('|W%s|n ' % value) if value else ''
-        # Append worn clothes.
-        if worn_string_list:
-            string += "|/|/%s is wearing %s." % (self, list_to_string(worn_string_list))
-        else:
-            string += "|/|/%s is not wearing anything." % self
+
+        worn = self.db.worn
+
+        worn_set = set()
+
+        for naked, clothing in worn:
+            if len(clothing) != 0:
+                worn_set.add(naked)
+
+        naked_dict = self.db.nakeds
+        for key, value in naked_dict.items():
+            string += '\n' if (key == 'head' or key == 'left-shoulder' or key == 'groin') else ''
+            string += worn[key][-1]['worn'] if key in worn_set else ('|W%s|n ' % value)
+            # string += ('|W%s|n ' % value) if value else ''
         return string
 
     def at_post_puppet(self, **kwargs):
