@@ -155,6 +155,7 @@ class CmdSetWorn(MuxCommand):
                 clothing.db.messages['worn'] = self.rhs
                 caller.msg("Worn message for %s set." % clothing.name)
 
+
 class CmdCoveragePlus(MuxCommand):
 
     key = "@coverage"
@@ -165,7 +166,7 @@ class CmdCoveragePlus(MuxCommand):
         if not self.args:
             caller.msg("need to provide item and coverage")
             return
-        if self.lhs
+        if self.lhs:
             clothing = self.caller.search(self.lhs, candidates=self.caller.contents)
             if not clothing:
                 self.caller.msg("thing to add coverage to must be carried")
@@ -288,6 +289,7 @@ class ClothedCharacterCmdSet(default_cmds.CharacterCmdSet):
         self.add(CmdDrop())
         self.add(CmdInventory())
         self.add(CmdSetWorn())
+        self.ad(CmdCoveragePlus())
 
     pass
 
