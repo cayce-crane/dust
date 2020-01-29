@@ -160,6 +160,16 @@ class CmdToggle(MuxCommand):
             self.caller.msg("Item must be clothing")
             return
         if clothing.db.toggled:
+            oldcoverage = clothing.db.togglecoverage
+            togglecoverage = clothing.db.coverage
+            for oldcovered in oldcoverage:
+                if oldcovered in togglecoverage:
+                    continue
+                else: # old coverage is now no longer covered
+                    caller.db.worn[oldcovered].remove(clothing)
+            for newcovered in togglecoverage:
+                if newcovered not in clothing.db.coverage:
+                    caller.db.worn[newcovered].append(clothing)
             clothing.db.toggled = False
             caller.msg("%s %s " % ("You", clothing.db.messages['toggle2']))
             caller.location.msg_contents("%s %s" % (caller.name, clothing.db.messages['otoggle2']), exclude=caller)
