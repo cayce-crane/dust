@@ -89,7 +89,7 @@ class CmdClothing(MuxCommand):
         if not self.args:
             return
         name = self.args
-        clothing = create_object("clothing.Clothing", key=name, location=caller.location,
+        clothing = create_object("clothing.Clothing", key=name, location=caller,
                                  locks="edit:id(%i) and perm(Builders);call:false()" % caller.id)
         message = "%s created '%s'."
         caller.msg(message % ("You", name))
