@@ -49,7 +49,7 @@ class Clothing(DefaultObject):
             wearer.db.worn[covered].append(self)
 
         # Echo a message to the room
-        message = "%s %s" % (wearer, self.db.messages['owear'])
+        message = "%s %s" % (wearer, self.attributes.get(messages)['owear'])
         wearer.msg("%s" % self.db.messages['wear'])
         wearer.location.msg_contents(message + ".")
 
@@ -61,7 +61,7 @@ class Clothing(DefaultObject):
         """
         self.db.worn = False
 
-        remove_message = "%s %s." % (wearer, self.db.message['oremove'])
+        remove_message = "%s %s." % (wearer, self.attributes.get(message)['oremove'])
         wearer.msg("%s" % self.db.messages['remove'])
         wearer.location.msg_contents(remove_message)
 
