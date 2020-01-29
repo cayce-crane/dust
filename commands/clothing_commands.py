@@ -10,6 +10,7 @@ from evennia import default_cmds
 from evennia.commands.default.muxcommand import MuxCommand
 from typeclasses.clothing import get_worn_clothes
 from evennia.utils import evtable
+from config.configlists import CLOTHING_MESSAGE_TYPES, NAKEDS_LIST
 
 
 # Maximum character length of 'wear style' strings, or None for unlimited.
@@ -301,6 +302,9 @@ class CmdCoveragePlus(MuxCommand):
                 self.caller.msg("thing to add coverage to must be carried")
                 return
             if self.rhs:
+                if self.rhs not in NAKEDS_LIST:
+                    self.caller.msg("%s is not a naked area. " % self.rhs)
+                    return
                 clothing.db.coverage.append(self.rhs.strip().lower())
                 caller.msg("Added coverage %s for %s" % (self.rhs, clothing.name))
 
@@ -321,6 +325,9 @@ class CmdCoverageMinus(MuxCommand):
                 self.caller.msg("thing to remove coverage to must be carried")
                 return
             if self.rhs:
+                if self.rhs not in NAKEDS_LIST:
+                    self.caller.msg("%s is not a naked area. " % self.rhs)
+                    return
                 clothing.db.coverage.remove(self.rhs.strip().lower())
                 caller.msg("Remove coverage %s for %s" % (self.rhs, clothing.name))
 
