@@ -76,7 +76,8 @@ class Character(DefaultCharacter):
 
         for naked, clothing in worn.items():
             if len(clothing) != 0:
-                worn_set.add(naked)
+                if clothing[-1].attributes.get("toggled"):
+                    worn_set.add(naked)
 
         naked_dict = self.db.nakeds
         for key, value in naked_dict.items():
