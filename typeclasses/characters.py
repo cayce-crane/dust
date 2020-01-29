@@ -35,18 +35,20 @@ class Character(DefaultCharacter):
 
     """
     def at_object_creation(self):
-        if not (self.attributes.has("idlepose")):
+        if not self.attributes.has("idlepose"):
             self.attributes.add("idlepose", "is standing here.")
-        if not (self.attributes.has("temp_idlepose")):
+        if not self.attributes.has("temp_idlepose"):
             self.attributes.add("temp_idlepose", "is standing here.")
-        if not (self.attributes.has("sleep_idlepose")):
+        if not self.attributes.has("sleep_idlepose"):
             self.attributes.add("sleep_idlepose", "is sleeping here.")
-        if not (self.attributes.has("nakeds")):
+        if not self.attributes.has("nakeds"):
             naked_dict = {naked: "" for naked in NAKEDS_LIST}
             self.attributes.add("nakeds", naked_dict)
         if not self.attributes.has("worn"):
             worn_dict = {naked: [] for naked in NAKEDS_LIST}
             self.attributes.add("worn", worn_dict)
+        if not self.attributes.has('skintone'):
+            self.attributes.add('skintone', '|n')
 
     def return_appearance(self, looker):
         """
@@ -107,3 +109,8 @@ class Character(DefaultCharacter):
                 self.location.for_contents(message, exclude=[self], from_obj=self)
                 self.db.prelogout_location = self.location
 
+    def at_after_move(self, source_location):
+
+        if self.attributes.has('temp_idlepose'):
+            self.db.temp_idlepose = ""
+        super(source_location)

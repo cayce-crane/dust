@@ -144,6 +144,9 @@ class CmdChar(MuxCommand):
             elif key == "sleep_idle":
                 caller.db.sleep_idlepose = self.rhs
                 caller.msg("Your sleep_idle pose is now '%s %s'" % (caller.key, self.rhs))
+            elif key == "skintone":
+                caller.db.skintone = self.rhs
+                caller.msg("You set your skintone to %s" % self.rhs)
             else:
                 # This will get expanded later as we add/refactor commands to be
                 # part of the @char commandset.
