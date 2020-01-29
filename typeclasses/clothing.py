@@ -10,6 +10,10 @@ class Clothing(DefaultObject):
             self.db.messages = {message: "" for message in CLOTHING_MESSAGE_TYPES}
         if not self.db.coverage:
             self.db.coverage = []
+        if not self.db.togglecoverage:
+            self.db.togglecoverage = []
+        if not self.db.toggled:
+            self.db.toggled = False
         if not self.db.seethru:
             self.db.seethru = False
         if not self.db.color:

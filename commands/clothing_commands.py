@@ -138,6 +138,37 @@ class CmdDrop(MuxCommand):
         obj.at_drop(caller)
 
 
+class CmdToggle(MuxCommand):
+    """
+    Toggle between a piece of clothing's two states.
+    Usage:
+        toggle <item>
+    """
+
+    key = "toggle"
+    help_category = "clothing"
+
+    def func(self):
+
+        caller = self.caller
+        if not self.args:
+            caller.msg("Need to provide an item to toggle")
+            return
+
+        clothing = self.caller.search(self.lhs, candidates=self.caller.contents)
+        if not self.clothing:
+            self.caller.msg("Item must be clothing")
+            return
+        if clothing.db.toggled:
+            clothing.db.toggled = False
+            caller.msg("%s " % clothing.db.messages['toggle2'])
+            caller.location.msg_contents("%s " % clothing.db.messages['otoggle2'])
+        else:
+            clothing.db.toggled = True
+            caller.msg("%s " % clothing.db.messages['toggle1'])
+            caller.location.msg_contents("%s " % clothing.db.messages['otoggle1'])
+
+
 class CmdSetWorn(MuxCommand):
     """
     Set the 'worn' message for an article of clothing
@@ -327,6 +358,141 @@ class CmdSetOtease(MuxCommand):
                 caller.msg("otease message for %s set as: %s" % (clothing.name, self.rhs))
 
 
+class CmdSetToggle1(MuxCommand):
+    """
+    Set the 'toggle1' message for an article of clothing
+    Usage:
+        @toggle1 <clothing item> = <message>
+    """
+
+    key = '@toggle1'
+    help_category = "tailoring"
+
+    def func(self):
+
+        caller = self.caller
+        if not self.args:
+            caller.msg("Need to provide item and message.")
+            return
+
+        if self.lhs:
+            clothing = self.caller.search(self.lhs, candidates=self.caller.contents)
+            if not clothing:
+                self.caller.msg("Thing to set message for must be carried or worn.")
+                return
+            if self.rhs:
+                clothing.db.messages['toggle1'] = self.rhs
+                caller.msg("toggle1 message for %s set as: %s" % (clothing.name, self.rhs))
+
+
+class CmdSetToggle2(MuxCommand):
+    """
+    Set the 'toggle2' message for an article of clothing
+    Usage:
+        @toggle2 <clothing item> = <message>
+    """
+
+    key = '@toggle2'
+    help_category = "tailoring"
+
+    def func(self):
+
+        caller = self.caller
+        if not self.args:
+            caller.msg("Need to provide item and message.")
+            return
+
+        if self.lhs:
+            clothing = self.caller.search(self.lhs, candidates=self.caller.contents)
+            if not clothing:
+                self.caller.msg("Thing to set message for must be carried or worn.")
+                return
+            if self.rhs:
+                clothing.db.messages['toggle2'] = self.rhs
+                caller.msg("toggle2 message for %s set as: %s" % (clothing.name, self.rhs))
+
+
+class CmdSetOtoggle1(MuxCommand):
+    """
+    Set the 'otoggle1' message for an article of clothing
+    Usage:
+        @otoggle1 <clothing item> = <message>
+    """
+
+    key = '@otoggle1'
+    help_category = "tailoring"
+
+    def func(self):
+
+        caller = self.caller
+        if not self.args:
+            caller.msg("Need to provide item and message.")
+            return
+
+        if self.lhs:
+            clothing = self.caller.search(self.lhs, candidates=self.caller.contents)
+            if not clothing:
+                self.caller.msg("Thing to set message for must be carried or worn.")
+                return
+            if self.rhs:
+                clothing.db.messages['otoggle1'] = self.rhs
+                caller.msg("otoggle1 message for %s set as: %s" % (clothing.name, self.rhs))
+
+
+class CmdSetOtoggle2(MuxCommand):
+    """
+    Set the 'otoggle2' message for an article of clothing
+    Usage:
+        @otoggle2 <clothing item> = <message>
+    """
+
+    key = '@otoggle2'
+    help_category = "tailoring"
+
+    def func(self):
+
+        caller = self.caller
+        if not self.args:
+            caller.msg("Need to provide item and message.")
+            return
+
+        if self.lhs:
+            clothing = self.caller.search(self.lhs, candidates=self.caller.contents)
+            if not clothing:
+                self.caller.msg("Thing to set message for must be carried or worn.")
+                return
+            if self.rhs:
+                clothing.db.messages['otoggle2'] = self.rhs
+                caller.msg("otoggle2 message for %s set as: %s" % (clothing.name, self.rhs))
+
+
+class CmdSetWornToggled(MuxCommand):
+    """
+    Set the 'worntoggled' message for an article of clothing
+    Usage:
+        @worntoggled <clothing item> = <message>
+    """
+
+    key = '@worntoggled'
+    help_category = "tailoring"
+
+    def func(self):
+
+        caller = self.caller
+        if not self.args:
+            caller.msg("Need to provide item and message.")
+            return
+
+        if self.lhs:
+            clothing = self.caller.search(self.lhs, candidates=self.caller.contents)
+            if not clothing:
+                self.caller.msg("Thing to set message for must be carried or worn.")
+                return
+            if self.rhs:
+                clothing.db.messages['worntoggled'] = self.rhs
+                caller.msg("worntoggled message for %s set as: %s" % (clothing.name, self.rhs))
+
+
 class CmdCoveragePlus(MuxCommand):
     """
     Add a naked covered by a piece of clothing.
@@ -383,6 +549,65 @@ class CmdCoverageMinus(MuxCommand):
                     return
                 clothing.db.coverage.remove(self.rhs.strip().lower())
                 caller.msg("Remove coverage %s for %s" % (self.rhs, clothing.name))
+
+
+
+class CmdToggleCoveragePlus(MuxCommand):
+    """
+    Add a naked covered by a piece of clothing when it's otggled.
+    Usage:
+        @togglecov+ <clothing item> = <naked>
+    """
+
+    key = "@togglecov+"
+    help_category = "tailoring"
+
+    def func(self):
+
+        caller = self.caller
+        if not self.args:
+            caller.msg("need to provide item and coverage")
+            return
+        if self.lhs:
+            clothing = self.caller.search(self.lhs, candidates=self.caller.contents)
+            if not clothing:
+                self.caller.msg("thing to add coverage to must be carried")
+                return
+            if self.rhs:
+                if self.rhs not in NAKEDS_LIST:
+                    self.caller.msg("%s is not a naked area. " % self.rhs)
+                    return
+                clothing.db.togglecoverage.append(self.rhs.strip().lower())
+                caller.msg("Added toggle coverage %s for %s" % (self.rhs, clothing.name))
+
+
+class CmdToggleCoverageMinus(MuxCommand):
+    """
+    Remove a naked covered by a piece of clothing when it's toggled.
+    Usage:
+        @togglecov- <clothing item> = <naked>
+    """
+
+    key = "@togglecov-"
+    help_category = "tailoring"
+
+    def func(self):
+
+        caller = self.caller
+        if not self.args:
+            caller.msg("need to provide item and coverage")
+            return
+        if self.lhs:
+            clothing = self.caller.search(self.lhs, candidates=self.caller.contents)
+            if not clothing:
+                self.caller.msg("thing to remove coverage to must be carried")
+                return
+            if self.rhs:
+                if self.rhs not in NAKEDS_LIST:
+                    self.caller.msg("%s is not a naked area. " % self.rhs)
+                    return
+                clothing.db.togglecoverage.remove(self.rhs.strip().lower())
+                caller.msg("Remove toggled coverage %s for %s" % (self.rhs, clothing.name))
 
 
 class CmdMessages(MuxCommand):
@@ -528,8 +753,15 @@ class ClothedCharacterCmdSet(default_cmds.CharacterCmdSet):
         self.add(CmdSetOwear())
         self.add(CmdSetRemove())
         self.add(CmdSetOremove())
+        self.add(CmdSetToggle1())
+        self.add(CmdSetToggle2())
+        self.add(CmdSetOtoggle1())
+        self.add(CmdSetOtoggle2())
+        self.add(CmdSetWornToggled())
         self.add(CmdCoveragePlus())
         self.add(CmdCoverageMinus())
+        self.add(CmdToggleCoveragePlus())
+        self.add(CmdToggleCoverageMinus())
         self.add(CmdSetTease())
         self.add(CmdSetOtease())
         self.add(CmdMessages())
