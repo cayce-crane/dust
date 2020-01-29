@@ -156,7 +156,7 @@ class CmdToggle(MuxCommand):
             return
 
         clothing = self.caller.search(self.lhs, candidates=self.caller.contents)
-        if not self.clothing:
+        if not clothing:
             self.caller.msg("Item must be clothing")
             return
         if clothing.db.toggled:
