@@ -765,6 +765,7 @@ class ClothedCharacterCmdSet(default_cmds.CharacterCmdSet):
         self.add(CmdSetTease())
         self.add(CmdSetOtease())
         self.add(CmdMessages())
+        self.add(CmdToggle())
 
     pass
 
