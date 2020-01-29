@@ -88,7 +88,9 @@ class CmdRemove(MuxCommand):
                 return
         for covered in clothing.db.coverage:
             worn = self.caller.db.worn
-            if worn[covered]:
+            if len(worn[covered]) == 1:
+                worn[covered] = []
+            elif worn[covered]:
                 worn[covered].pop()
         clothing.remove(self.caller)
 
@@ -241,6 +243,48 @@ class CmdSetOremove(MuxCommand):
                 caller.msg("oremove message for %s set." % clothing.name)
 
 
+class CmdSetTease(MuxCommand):
+
+    key = '@tease'
+
+    def func(self):
+
+        caller = self.caller
+        if not self.args:
+            caller.msg("Need to provide item and message.")
+            return
+
+        if self.lhs:
+            clothing = self.caller.search(self.lhs, candidates=self.caller.contents)
+            if not clothing:
+                self.caller.msg("Thing to set message for must be carried or worn.")
+                return
+            if self.rhs:
+                clothing.db.messages['tease'] = self.rhs
+                caller.msg("tease message for %s set." % clothing.name)
+
+
+class CmdSetOtease(MuxCommand):
+
+    key = '@otease'
+
+    def func(self):
+
+        caller = self.caller
+        if not self.args:
+            caller.msg("Need to provide item and message.")
+            return
+
+        if self.lhs:
+            clothing = self.caller.search(self.lhs, candidates=self.caller.contents)
+            if not clothing:
+                self.caller.msg("Thing to set message for must be carried or worn.")
+                return
+            if self.rhs:
+                clothing.db.messages['otease'] = self.rhs
+                caller.msg("otease message for %s set." % clothing.name)
+
+
 class CmdCoveragePlus(MuxCommand):
 
     key = "@coverage+"
@@ -279,8 +323,6 @@ class CmdCoverageMinus(MuxCommand):
             if self.rhs:
                 clothing.db.coverage.remove(self.rhs.strip().lower())
                 caller.msg("Remove coverage %s for %s" % (self.rhs, clothing.name))
-
-
 
 
 class CmdGive(MuxCommand):
@@ -401,6 +443,9 @@ class ClothedCharacterCmdSet(default_cmds.CharacterCmdSet):
         self.add(CmdSetRemove())
         self.add(CmdSetOremove())
         self.add(CmdCoveragePlus())
+        self.add(CmdCoverageMinus())
+        self.add(CmdSetTease())
+        self.add(CmdSetOtease())
 
     pass
 
