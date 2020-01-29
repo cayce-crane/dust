@@ -59,16 +59,6 @@ class Character(DefaultCharacter):
         # get description, build string
         string = "|c%s|n\n" % self.get_display_name(looker)
         desc = self.db.desc
-        worn_string_list = []
-        clothes_list = get_worn_clothes(self)
-        # Append worn, uncovered clothing to the description
-        #for garment in clothes_list:
-        #    # If 'worn' is True, just append the name
-        #    if garment.db.worn is True:
-        #        worn_string_list.append(garment.name)
-        #    # Otherwise, append the name and the string value of 'worn'
-        #    elif garment.db.worn:
-        #        worn_string_list.append("%s %s" % (garment.name, garment.db.worn))
         if desc:
             string += "%s" % desc
 
@@ -82,13 +72,12 @@ class Character(DefaultCharacter):
 
         naked_dict = self.db.nakeds
         for key, value in naked_dict.items():
-            string += '\n' if (key == 'head' or key == 'left-shoulder' or key == 'groin') else ''
+            string += '\n\n' if (key == 'head' or key == 'left-shoulder' or key == 'groin') else ''
             if key in worn_set:
                 clothing_item = worn[key][-1].attributes.get("messages")['worn']
                 string += clothing_item
             else:
-                string +=('|W%s|n ' % value)
-                # string += ('|W%s|n ' % value) if value else ''
+                string +=('|W%s|n|n ' % value)
         return string
 
     def at_post_puppet(self, **kwargs):

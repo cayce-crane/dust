@@ -149,11 +149,95 @@ class CmdSetWorn(MuxCommand):
         if self.lhs:
             clothing = self.caller.search(self.lhs, candidates=self.caller.contents)
             if not clothing:
-                self.caller.msg("Thing to remove must be carried or worn.")
+                self.caller.msg("Thing to set message for must be carried or worn.")
                 return
             if self.rhs:
                 clothing.db.messages['worn'] = self.rhs
                 caller.msg("Worn message for %s set." % clothing.name)
+
+
+class CmdSetWear(MuxCommand):
+
+    key = '@wear'
+
+    def func(self):
+
+        caller = self.caller
+        if not self.args:
+            caller.msg("Need to provide item and message.")
+            return
+
+        if self.lhs:
+            clothing = self.caller.search(self.lhs, candidates=self.caller.contents)
+            if not clothing:
+                self.caller.msg("Thing to set message for must be carried or worn.")
+                return
+            if self.rhs:
+                clothing.db.messages['wear'] = self.rhs
+                caller.msg("Wear message for %s set." % clothing.name)
+
+
+class CmdSetOwear(MuxCommand):
+
+    key = '@owear'
+
+    def func(self):
+
+        caller = self.caller
+        if not self.args:
+            caller.msg("Need to provide item and message.")
+            return
+
+        if self.lhs:
+            clothing = self.caller.search(self.lhs, candidates=self.caller.contents)
+            if not clothing:
+                self.caller.msg("Thing to set message for must be carried or worn.")
+                return
+            if self.rhs:
+                clothing.db.messages['owear'] = self.rhs
+                caller.msg("owear message for %s set." % clothing.name)
+
+
+class CmdSetRemove(MuxCommand):
+
+    key = '@remove'
+
+    def func(self):
+
+        caller = self.caller
+        if not self.args:
+            caller.msg("Need to provide item and message.")
+            return
+
+        if self.lhs:
+            clothing = self.caller.search(self.lhs, candidates=self.caller.contents)
+            if not clothing:
+                self.caller.msg("Thing to set message for must be carried or worn.")
+                return
+            if self.rhs:
+                clothing.db.messages['remove'] = self.rhs
+                caller.msg("Remove message for %s set." % clothing.name)
+
+
+class CmdSetOremove(MuxCommand):
+
+    key = '@oremove'
+
+    def func(self):
+
+        caller = self.caller
+        if not self.args:
+            caller.msg("Need to provide item and message.")
+            return
+
+        if self.lhs:
+            clothing = self.caller.search(self.lhs, candidates=self.caller.contents)
+            if not clothing:
+                self.caller.msg("Thing to set message for must be carried or worn.")
+                return
+            if self.rhs:
+                clothing.db.messages['oremove'] = self.rhs
+                caller.msg("oremove message for %s set." % clothing.name)
 
 
 class CmdCoveragePlus(MuxCommand):
@@ -174,6 +258,28 @@ class CmdCoveragePlus(MuxCommand):
             if self.rhs:
                 clothing.db.coverage.append(self.rhs.strip().lower())
                 caller.msg("Added coverage %s for %s" % (self.rhs, clothing.name))
+
+
+class CmdCoverageMinus(MuxCommand):
+
+    key = "@coverage-"
+
+    def func(self):
+
+        caller = self.caller
+        if not self.args:
+            caller.msg("need to provide item and coverage")
+            return
+        if self.lhs:
+            clothing = self.caller.search(self.lhs, candidates=self.caller.contents)
+            if not clothing:
+                self.caller.msg("thing to remove coverage to must be carried")
+                return
+            if self.rhs:
+                clothing.db.coverage.remove(self.rhs.strip().lower())
+                caller.msg("Remove coverage %s for %s" % (self.rhs, clothing.name))
+
+
 
 
 class CmdGive(MuxCommand):
@@ -289,6 +395,10 @@ class ClothedCharacterCmdSet(default_cmds.CharacterCmdSet):
         self.add(CmdDrop())
         self.add(CmdInventory())
         self.add(CmdSetWorn())
+        self.add(CmdSetWear())
+        self.add(CmdSetOwear())
+        self.add(CmdSetRemove())
+        self.add(CmdSetOremove())
         self.add(CmdCoveragePlus())
 
     pass
