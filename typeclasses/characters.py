@@ -81,12 +81,11 @@ class Character(DefaultCharacter):
         naked_dict = self.db.nakeds
         for key, value in naked_dict.items():
             string += '\n\n' if (key == 'head' or key == 'left-shoulder' or key == 'groin') else ''
-            if key in shown_set:
-                continue
-            elif key in worn_set:
+            if key in worn_set:
                 clothing_item = worn[key][-1].attributes.get("messages")['worn']
-                string += ('%s ' % clothing_item)
-                shown_set.add(worn[key][-1])
+                if not worn[key][-1] in shown_set:
+                    string += ('%s ' % clothing_item)
+                    shown_set.add(worn[key][-1])
             else:
                 string +=('|W%s|n ' % value)
         return string
