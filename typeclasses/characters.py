@@ -89,7 +89,8 @@ class Character(DefaultCharacter):
                     string += ('%s ' % clothing_item)
                     shown_set.add(worn[key][-1])
             else:
-                string +=('|W%s|n ' % value)
+                skintone = self.db.skintone if self.attributes.has("skintone") else "|W"
+                string += ('|%s%s|n ' % (skintone, value))
         return string
 
     def at_post_puppet(self, **kwargs):
