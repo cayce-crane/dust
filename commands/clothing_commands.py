@@ -83,7 +83,7 @@ class CmdRemove(MuxCommand):
             return
         for covered in clothing.db.coverage:
             worn = self.caller.db.worn
-            if worn[covered][-1] != clothing:
+            if worn[covered] and worn[covered][-1] != clothing:
                 self.caller.msg("You need to remove %s first." % worn[covered][-1].name)
                 return
         for covered in clothing.db.coverage:
