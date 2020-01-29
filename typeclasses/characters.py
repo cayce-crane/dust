@@ -35,11 +35,18 @@ class Character(DefaultCharacter):
 
     """
     def at_object_creation(self):
-        self.attributes.add("idlepose", "is standing here.")
-        naked_dict = {naked: "" for naked in NAKEDS_LIST}
-        self.attributes.add("nakeds", naked_dict)
-        worn_dict = {naked: [] for naked in NAKEDS_LIST}
-        self.attributes.add("worn", worn_dict)
+        if not (self.attributes.has("idlepose")):
+            self.attributes.add("idlepose", "is standing here.")
+        if not (self.attributes.has("temp_idlepose")):
+            self.attributes.add("temp_idlepose", "is standing here.")
+        if not (self.attributes.has("sleep_idlepose")):
+            self.attributes.add("sleep_idlepose", "is sleeping here.")
+        if not (self.attributes.has("nakeds")):
+            naked_dict = {naked: "" for naked in NAKEDS_LIST}
+            self.attributes.add("nakeds", naked_dict)
+        if not self.attributes.has("worn"):
+            worn_dict = {naked: [] for naked in NAKEDS_LIST}
+            self.attributes.add("worn", worn_dict)
 
     def return_appearance(self, looker):
         """

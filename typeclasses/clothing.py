@@ -30,10 +30,14 @@ def get_worn_clothes(character, exclude_covered=False):
 class Clothing(DefaultObject):
 
     def at_object_creation(self):
-        self.db.messages = {message: "" for message in CLOTHING_MESSAGE_TYPES}
-        self.db.coverage = []
-        self.db.seethru = False
-        self.db.color = ""
+        if not self.db.messages:
+            self.db.messages = {message: "" for message in CLOTHING_MESSAGE_TYPES}
+        if not self.db.coverage:
+            self.db.coverage = []
+        if not self.db.seethru:
+            self.db.seethru = False
+        if not self.db.color:
+            self.db.color = ""
 
     def wear(self, wearer):
         """

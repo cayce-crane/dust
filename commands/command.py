@@ -80,23 +80,20 @@ class CmdNpc(Command):
         caller.msg("You told %s to do '%s'." % (npc.key, self.cmdname))
 
 
-class CmdIdle(Command):
+class CmdClothing(MuxCommand):
 
-    key = "@idle"
-    help_category = "mush"
-
-    def parse(self):
-        idlepose = None
-        if "=" in self.args:
-            _, idlepose = [part.strip() for part in self.args.rsplit("=")]
-        self.idlepose = idlepose
+    key = "@clothing"
 
     def func(self):
         caller = self.caller
-        if not self.cmdname:
-            caller.msg("Usage: @idle = <idle pose>")
-        caller.db.idlepose = self.idlepose
-        caller.msg("Your idle pose is now '%s %s'" % (caller.key, self.idlepose))
+        if not self.args:
+            return
+        name = self.args
+        clothing = create_object("clothing.Clothing", key=name, location=caller.location,
+                                 locks="edit:id(%i) and perm(Builders);call:false()" % caller.id)
+        message = "%s created '%s'."
+        caller.msg(message % ("You", name))
+        caller.location.msg_contents(message % (caller.key, name), exclude=caller)
 
 
 class CmdChar(MuxCommand):
@@ -105,11 +102,13 @@ class CmdChar(MuxCommand):
     Command to control character specifics; nakeds, description, idle poses, etc.
 
     Usage:
-        only nakeds for now.
 
-        @char nakeds                                    : list nakeds
+        @char nakeds                             : list nakeds
         @char <naked part> = <description>       : Assign/overwrite naked
         @char <naked part> =                     : clear naked for this part
+        @char idle = <idle pose>                 : Set your idle pose
+        @char temp_idle = <idle pose>            : Set your temp_idle pose
+        @char sleep_idle = <idle pose>           : Set your sleep_idle pose
 
     """
 
@@ -136,10 +135,19 @@ class CmdChar(MuxCommand):
                 else:
                     caller.db.nakeds[key] = ""
                     caller.msg("Naked description for %s cleared." % key)
+            elif key == "idle":
+                caller.db.idlepose = self.rhs
+                caller.msg("Your idle pose is now '%s %s'" % (caller.key, self.rhs))
+            elif key == "temp_idle":
+                caller.db.temp_idlepose = self.rhs
+                caller.msg("Your temp_idle pose is now '%s %s'" % (caller.key, self.rhs))
+            elif key == "sleep_idle":
+                caller.db.sleep_idlepose = self.rhs
+                caller.msg("Your sleep_idle pose is now '%s %s'" % (caller.key, self.rhs))
             else:
                 # This will get expanded later as we add/refactor commands to be
                 # part of the @char commandset.
-                caller.msg("No naked part %s." % key)
+                caller.msg("No corresponding @char command for %s." % key)
 
 # -------------------------------------------------------------
 #
