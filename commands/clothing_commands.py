@@ -8,7 +8,6 @@ Commands describe the input the account can do to the game.
 
 from evennia import default_cmds
 from evennia.commands.default.muxcommand import MuxCommand
-from typeclasses.clothing import get_worn_clothes
 from evennia.utils import evtable
 from config.configlists import CLOTHING_MESSAGE_TYPES, NAKEDS_LIST
 

@@ -1,30 +1,6 @@
 
 from evennia import DefaultObject
-from evennia.utils import list_to_string
 from config.configlists import CLOTHING_MESSAGE_TYPES, NAKEDS_LIST
-
-
-# HELPER FUNCTIONS START HERE
-
-def get_worn_clothes(character, exclude_covered=False):
-    """
-    Get a list of clothes worn by a given character.
-    Args:
-        character (obj): The character to get a list of worn clothes from.
-    Kwargs:
-        exclude_covered (bool): If True, excludes clothes covered by other
-                                clothing from the returned list.
-    Returns:
-        ordered_clothes_list (list): A list of clothing items worn by the
-                                     given character, ordered according to
-                                     the CLOTHING_TYPE_ORDER option specified
-                                     in this module.
-    """
-    clothes_list = []
-    for thing in character.contents:
-        if thing.db.worn:
-            clothes_list.append(thing)
-    return clothes_list
 
 
 class Clothing(DefaultObject):

@@ -8,8 +8,6 @@ creation commands.
 
 """
 from evennia import DefaultCharacter
-from evennia.utils import list_to_string
-from typeclasses.clothing import get_worn_clothes
 from config.configlists import NAKEDS_LIST
 
 
