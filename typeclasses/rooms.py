@@ -33,7 +33,10 @@ class Room(DefaultRoom):
             if con.destination:
                 exits.append(key)
             elif con.is_typeclass(Character):
-                users.append("|c%s|n %s" % (key, con.db.idlepose))
+                if con.db.temp_idlepose:
+                    users.append("|c%s|n %s" % (key, con.db.temp_idlepose))
+                else:
+                    users.append("|c%s|n %s" % (key, con.db.idlepose))
             else:
                 things[key].append(con)
         string = "|c%s|n\n" % self.get_display_name(looker)
