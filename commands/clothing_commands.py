@@ -140,8 +140,14 @@ class CmdDrop(MuxCommand):
 
 
 class CmdSetWorn(MuxCommand):
+    """
+    Set the 'worn' message for an article of clothing
+    Usage:
+        @worn <clothing item> = <message>
+    """
 
     key = '@worn'
+    help_category = "tailoring"
 
     def func(self):
 
@@ -157,12 +163,18 @@ class CmdSetWorn(MuxCommand):
                 return
             if self.rhs:
                 clothing.db.messages['worn'] = self.rhs
-                caller.msg("Worn message for %s set." % clothing.name)
+                caller.msg("Worn message for %s set as: %s" % (clothing.name, self.rhs))
 
 
 class CmdSetWear(MuxCommand):
+    """
+    Set the 'wear' message for an article of clothing
+    Usage:
+        @wear <clothing item> = <message>
+    """
 
     key = '@wear'
+    help_category = "tailoring"
 
     def func(self):
 
@@ -178,12 +190,18 @@ class CmdSetWear(MuxCommand):
                 return
             if self.rhs:
                 clothing.db.messages['wear'] = self.rhs
-                caller.msg("Wear message for %s set." % clothing.name)
+                caller.msg("Wear message for %s set as: %s" % (clothing.name, self.rhs))
 
 
 class CmdSetOwear(MuxCommand):
+    """
+    Set the 'owear' message for an article of clothing
+    Usage:
+        @owear <clothing item> = <message>
+    """
 
     key = '@owear'
+    help_category = "tailoring"
 
     def func(self):
 
@@ -199,12 +217,18 @@ class CmdSetOwear(MuxCommand):
                 return
             if self.rhs:
                 clothing.db.messages['owear'] = self.rhs
-                caller.msg("owear message for %s set." % clothing.name)
+                caller.msg("owear message for %s set as: %s" % (clothing.name, self.rhs))
 
 
 class CmdSetRemove(MuxCommand):
+    """
+    Set the 'remove' message for an article of clothing
+    Usage:
+        @remove <clothing item> = <message>
+    """
 
     key = '@remove'
+    help_category = "tailoring"
 
     def func(self):
 
@@ -220,12 +244,18 @@ class CmdSetRemove(MuxCommand):
                 return
             if self.rhs:
                 clothing.db.messages['remove'] = self.rhs
-                caller.msg("Remove message for %s set." % clothing.name)
+                caller.msg("Remove message for %s set as: %s" % (clothing.name, self.rhs))
 
 
 class CmdSetOremove(MuxCommand):
+    """
+    Set the 'oremove' message for an article of clothing
+    Usage:
+        @oremove <clothing item> = <message>
+    """
 
     key = '@oremove'
+    help_category = "tailoring"
 
     def func(self):
 
@@ -241,12 +271,18 @@ class CmdSetOremove(MuxCommand):
                 return
             if self.rhs:
                 clothing.db.messages['oremove'] = self.rhs
-                caller.msg("oremove message for %s set." % clothing.name)
+                caller.msg("oremove message for %s set as: %s" % (clothing.name, self.rhs))
 
 
 class CmdSetTease(MuxCommand):
+    """
+    Set the 'tease' message for an article of clothing
+    Usage:
+        @tease <clothing item> = <message>
+    """
 
     key = '@tease'
+    help_category = "tailoring"
 
     def func(self):
 
@@ -266,8 +302,14 @@ class CmdSetTease(MuxCommand):
 
 
 class CmdSetOtease(MuxCommand):
+    """
+    Set the 'otease' message for an article of clothing
+    Usage:
+        @otease <clothing item> = <message>
+    """
 
     key = '@otease'
+    help_category = "tailoring"
 
     def func(self):
 
@@ -283,12 +325,18 @@ class CmdSetOtease(MuxCommand):
                 return
             if self.rhs:
                 clothing.db.messages['otease'] = self.rhs
-                caller.msg("otease message for %s set." % clothing.name)
+                caller.msg("otease message for %s set as: %s" % (clothing.name, self.rhs))
 
 
 class CmdCoveragePlus(MuxCommand):
+    """
+    Add a naked covered by a piece of clothing.
+    Usage:
+        @coverage+ <clothing item> = <naked>
+    """
 
     key = "@coverage+"
+    help_category = "tailoring"
 
     def func(self):
 
@@ -310,8 +358,14 @@ class CmdCoveragePlus(MuxCommand):
 
 
 class CmdCoverageMinus(MuxCommand):
+    """
+    Remove a naked covered by a piece of clothing.
+    Usage:
+        @coverage- <clothing item> = <naked>
+    """
 
     key = "@coverage-"
+    help_category = "tailoring"
 
     def func(self):
 
@@ -332,9 +386,35 @@ class CmdCoverageMinus(MuxCommand):
                 caller.msg("Remove coverage %s for %s" % (self.rhs, clothing.name))
 
 
+class CmdMessages(MuxCommand):
+    """
+    Show the existing messages for an article of clothing.
+    Usage:
+        @messages <clothing item>
+    """
+
+    key = "@messages"
+    help_category = "tailoring"
+
+    def func(self):
+
+        caller = self.caller
+        if not self.args:
+            caller.msg("Need to provide the article of clothing to view messages for.")
+            return
+        clothing = self.caller.search(self.args, candidates=self.caller.contents)
+        if not clothing:
+            self.caller.msg("Thing to view messages for must be clothing.")
+            return
+        message_string = ""
+        for message_name, message in clothing.db.messages.items():
+            message_string += "%s: %s\n" % (message_name, message)
+        caller.msg("Messages for %s:\n%s" % (clothing.name, message_string))
+
+
 class CmdGive(MuxCommand):
     """
-    give away something to someone
+    Give away something to someone
     Usage:
       give <inventory obj> = <target>
     Gives an items from your inventory to another character,
@@ -453,6 +533,7 @@ class ClothedCharacterCmdSet(default_cmds.CharacterCmdSet):
         self.add(CmdCoverageMinus())
         self.add(CmdSetTease())
         self.add(CmdSetOtease())
+        self.add(CmdMessages())
 
     pass
 

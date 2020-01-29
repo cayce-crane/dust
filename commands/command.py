@@ -35,11 +35,16 @@ class Command(BaseCommand):
 
 
 class CmdCreateNpc(Command):
+    """
+    Create a new npc.
+    Usage:
+        @createnpc <NPC name>
+    """
 
     key = "@createnpc"
     aliases = ["@createNPC"]
     locks = "call:not perm(nonpcs)"    
-    help_category = "mush"
+    help_category = "gm"
 
     def func(self):
         caller = self.caller
@@ -48,17 +53,22 @@ class CmdCreateNpc(Command):
             return
         name = self.args.strip().capitalize()
         npc = create_object("characters.Character", key=name, location=caller.location,
-                            locks="edit:id(%i) and perm(Builders);call:false()" % caller.id)
+                            locks="edit:id(%i) and perm(Builders);call:false();npc:true()" % caller.id)
         message = "%s created the NPC '%s'."
         caller.msg(message % ("You", name))
         caller.location.msg_contents(message % (caller.key, name), exclude=caller)
 
 
 class CmdNpc(Command):
+    """
+    Tell an NPC to perform an action without puppeting them.
+    Usage:
+        @npc <npc name> = <action>
+    """
     
     key = "@npc"
     locks = "call:not perm(nonpcs)"
-    help_category = "mush"
+    help_category = "gm"
 
     def parse(self):
         name, cmdname = None, None
@@ -81,8 +91,14 @@ class CmdNpc(Command):
 
 
 class CmdClothing(MuxCommand):
+    """
+    Create a new piece of clothing.
+    Usage:
+        @clothing <new clothing name>
+    """
 
     key = "@clothing"
+    help_category = "gm"
 
     def func(self):
         caller = self.caller
@@ -103,18 +119,19 @@ class CmdChar(MuxCommand):
 
     Usage:
 
-        @char nakeds                             : list nakeds
+        @char nakeds                             : List nakeds
         @char <naked part> = <description>       : Assign/overwrite naked
         @char <naked part> =                     : clear naked for this part
-        @char idle = <idle pose>                 : Set your idle pose
-        @char temp_idle = <idle pose>            : Set your temp_idle pose
-        @char sleep_idle = <idle pose>           : Set your sleep_idle pose
+        @char idle = <idle pose>                 : Set your idle pose (what players see when they look at a room you're in)
+        @char temp-idle = <idle pose>            : Set your temp-idle pose (same as idle, but clears when you move rooms)
+        @char sleep-idle = <idle pose>           : Set your sleep-idle pose (what players see when you're logged out)
+        @char skintone = <skintone code>         : Set your skintone, which colors your nakeds. Use 'color xterm256' to see options.
 
     """
 
     key = "@char"
     locks = "cmd:all()"
-    help_category = "Character"
+    help_category = "character"
 
     def func(self):
 
@@ -124,7 +141,7 @@ class CmdChar(MuxCommand):
         if args.lower() == "nakeds" and not self.rhs:
             nakeds_string = ''
             for key, value in caller.db.nakeds.items():
-                nakeds_string += ("%s: %s\n" % (key, value))
+                nakeds_string += ("%s: %s%s|n\n" % (key, caller.db.skintone, value))
             caller.msg("\nNaked descriptions:\n\n%s" % nakeds_string)
         elif self.lhs:
             key = self.lhs.strip().lower()
@@ -138,18 +155,16 @@ class CmdChar(MuxCommand):
             elif key == "idle":
                 caller.db.idlepose = self.rhs
                 caller.msg("Your idle pose is now '%s %s'" % (caller.key, self.rhs))
-            elif key == "temp_idle":
+            elif key == "temp-idle":
                 caller.db.temp_idlepose = self.rhs
-                caller.msg("Your temp_idle pose is now '%s %s'" % (caller.key, self.rhs))
-            elif key == "sleep_idle":
+                caller.msg("Your temp-idle pose is now '%s %s'" % (caller.key, self.rhs))
+            elif key == "sleep-idle":
                 caller.db.sleep_idlepose = self.rhs
-                caller.msg("Your sleep_idle pose is now '%s %s'" % (caller.key, self.rhs))
+                caller.msg("Your sleep-idle pose is now '%s %s'" % (caller.key, self.rhs))
             elif key == "skintone":
                 caller.db.skintone = self.rhs
                 caller.msg("You set your skintone to %s" % self.rhs)
             else:
-                # This will get expanded later as we add/refactor commands to be
-                # part of the @char commandset.
                 caller.msg("No corresponding @char command for %s." % key)
 
 # -------------------------------------------------------------
