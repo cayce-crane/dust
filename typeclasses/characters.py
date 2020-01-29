@@ -83,8 +83,12 @@ class Character(DefaultCharacter):
         naked_dict = self.db.nakeds
         for key, value in naked_dict.items():
             string += '\n' if (key == 'head' or key == 'left-shoulder' or key == 'groin') else ''
-            string += worn[key][-1].db.messages['worn'] if key in worn_set else ('|W%s|n ' % value)
-            # string += ('|W%s|n ' % value) if value else ''
+            if key in worn_set:
+                clothing_item = worn[key][-1].attributes.get("messages")['worn']
+                string += clothing_item
+            else:
+                string +=('|W%s|n ' % value)
+                # string += ('|W%s|n ' % value) if value else ''
         return string
 
     def at_post_puppet(self, **kwargs):
