@@ -15,7 +15,6 @@ own cmdsets by inheriting from them or directly from `evennia.CmdSet`.
 """
 
 from evennia import default_cmds
-from evennia.contrib import simpledoor
 from commands import command
 from commands import clothing_commands
 
@@ -42,8 +41,6 @@ class CharacterCmdSet(default_cmds.CharacterCmdSet):
         self.add(clothing_commands.ClothedCharacterCmdSet())
         self.add(command.CmdChar())
         self.add(command.CmdClothing())
-        self.add(simpledoor.CmdOpen())
-        self.add(simpledoor.CmdOpenCloseDoor())
 
 
 class AccountCmdSet(default_cmds.AccountCmdSet):
