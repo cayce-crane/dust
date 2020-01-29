@@ -114,4 +114,6 @@ class Character(DefaultCharacter):
 
         if self.attributes.has('temp_idlepose'):
             self.db.temp_idlepose = ""
-        super(source_location)
+
+        if self.location.access(self, "view"):
+            self.msg(self.at_look(self.location))
