@@ -161,12 +161,12 @@ class CmdToggle(MuxCommand):
             return
         if clothing.db.toggled:
             clothing.db.toggled = False
-            caller.msg("%s " % clothing.db.messages['toggle2'])
-            caller.location.msg_contents("%s " % clothing.db.messages['otoggle2'])
+            caller.msg("%s %s " % ("You", clothing.db.messages['toggle2']))
+            caller.location.msg_contents("%s %s" % (caller.name, clothing.db.messages['otoggle2']), exclude=caller)
         else:
             clothing.db.toggled = True
-            caller.msg("%s " % clothing.db.messages['toggle1'])
-            caller.location.msg_contents("%s " % clothing.db.messages['otoggle1'])
+            caller.msg("%s %s" % ("You", clothing.db.messages['toggle1']))
+            caller.location.msg_contents("%s %s" % (caller.name, clothing.db.messages['otoggle1']), exclude=caller)
 
 
 class CmdSetWorn(MuxCommand):
