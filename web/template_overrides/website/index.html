@@ -1,0 +1,86 @@
+{% extends "website/base.html" %}
+
+{% block titleblock %}Home{% endblock %}
+
+{% block header_ext %}
+{% endblock %}
+
+{% block content %}
+
+<!-- This page acts as an overwrite for the default evennia webpage found in vennia/web/website/templates/website/index.html-->
+<div class="row">
+  <div class="col">
+    <div class="card">
+      <div class="card-body">
+        <h1 class="card-title">Welcome!</h1>
+
+        <hr />
+        <p>
+          Welcome to DUST & CHROME, a radical, drug-fueled roleplaying MUD with an emphasis on
+          STYLE, ART, and ATTITUDE. Jam that cyberdeck-tether into the back of your skull and 
+          <a href="{% url 'webclient:index' %}">step into the NET</a>!<br>
+          <br />
+          If you're a decker with the right chops, take a bite out of the <a href="{% url 'admin:index' %}">admin interface</a>
+          to view and edit the database.
+        </p>
+          {% if webclient_enabled %}
+        <p>
+          Connect directly to the game using our 
+          <a href="{% url 'webclient:index' %}">online client</a>!<br>
+        </p>
+          {% endif %}
+        <p>
+          Here's some icky <a href="https://github.com/evennia/evennia/wiki">documentation</a>.
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<hr />
+
+<div class="row">
+  <div class="col-12 col-md-4 mb-3">
+    <div class="card">
+      <h4 class="card-header text-center">Accounts</h4>
+
+      <div class="card-body">
+        <p>
+          There's currently <strong>{{num_accounts_connected}}</strong> choom connected out of a total of <strong>{{num_accounts_registered}}</strong> megasick account{{num_accounts_registered|pluralize}} registered.
+        </p>
+        <p>
+          Of these, <strong>{{num_accounts_registered_recent}}</strong> were created this week, and <strong>{{num_accounts_connected_recent}}</strong> have connected within the last seven days.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-12 col-md-4 mb-3">
+    <div class="card">
+      <h4 class="card-header text-center">Recently Connected</h4>
+
+      <div class="card-body px-0 py-0">
+        <ul class="list-group">
+          {% for account in accounts_connected_recent %}
+            <li class="list-group-item">{{account.username}}&mdash;<em>{{account.last_login|timesince}} ago</em></li>
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-12 col-md-4 mb-3">
+    <div class="card">
+      <h4 class="card-header text-center">Database Stats</h4>
+
+      <div class="card-body py-0 px-0">
+        <ul class="list-group">
+          <li class="list-group-item">{{num_accounts_registered}} account{{num_accounts_registered|pluralize}} (+ {{num_characters}} character{{num_characters|pluralize}})</li>
+          <li class="list-group-item">{{num_rooms}} room{{num_rooms|pluralize}} (+ {{num_exits}} exits)</li>
+          <li class="list-group-item">{{num_others}} other objects</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
