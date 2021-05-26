@@ -744,6 +744,28 @@ class CmdInventory(MuxCommand):
         string += "|/|wYou are wearing:\n%s" % wear_table
         self.caller.msg(string)
 
+class CmdSeethru(MuxCommand):
+    """
+    Toggle whether an item of clothing is see-through, ie. replaces a naked.
+    Usage:
+        @seethru <clothing item>
+    """
+
+    key = "@seethru"
+    help_category = "tailoring"
+
+    def func(self):
+
+        caller = self.caller
+        if not self.args:
+            caller.msg("Need to provide an article of clothing on which to toggle see-through.")
+            return
+        clothing = self.caller.search(self.args, candidates=self.caller.contents)
+        if not clothing:
+            self.caller.msg("Target must be clothing.")
+            return
+        clothing.db.seethru = not clothing.db.seethru
+        caller.msg("See-through for %s set to %s" % (clothing.name, clothing.db.seethru))
 
 class ClothedCharacterCmdSet(default_cmds.CharacterCmdSet):
     """
@@ -786,6 +808,7 @@ class ClothedCharacterCmdSet(default_cmds.CharacterCmdSet):
         self.add(CmdSetOtease())
         self.add(CmdMessages())
         self.add(CmdToggle())
+        self.add(CmdSeethru())
 
     pass
 

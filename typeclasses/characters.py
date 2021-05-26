@@ -74,23 +74,37 @@ class Character(DefaultCharacter):
         worn_set = set()
         shown_set = set()
 
+        # TODO DUST-58
+        skintone = self.db.skintone if self.attributes.has("skintone") else "|W" #TODO DELETE THIS NEPHEW...
+
         for naked, clothing in worn.items():
             if len(clothing) != 0:
                 worn_set.add(naked)
         naked_dict = self.db.nakeds
-        for key, value in naked_dict.items():
-            string += '\n\n' if (key == 'head' or key == 'left-shoulder' or key == 'groin') else ''
-            if key in worn_set:
-                if worn[key][-1].attributes.get("toggled"):
-                    clothing_item = worn[key][-1].attributes.get("messages")['worntoggled']
+        for naked_name, naked_value in naked_dict.items():
+            # Possible I'm breaking this with the expanded check for empty string
+            string += '\n\n' if ((naked_name == 'head'
+                                 or naked_name == 'left-shoulder'
+                                 or naked_name == 'groin') and naked_value != '') else ''
+            if naked_name in worn_set:
+                # What in god's name was I doing with this
+                # update: it appears the second index is to get the packed db object itself but there
+                # absolutely has got to be a better way
+                if worn[naked_name][-1].attributes.get("toggled"):
+                    clothing_item_string = worn[naked_name][-1].attributes.get("messages")['worntoggled']
                 else:
-                    clothing_item = worn[key][-1].attributes.get("messages")['worn']
-                if not worn[key][-1] in shown_set:
-                    string += ('%s ' % clothing_item)
-                    shown_set.add(worn[key][-1])
+                    clothing_item_string = worn[naked_name][-1].attributes.get("messages")['worn']
+                # I do not understand why we need this
+                # in fact I'm almost certain we can axe this
+                # like we never do anything but add these to it
+                # I feel like it had/has to do with layering?
+                if not worn[naked_name][-1] in shown_set:
+                    string += ('%s ' % clothing_item_string)
+                    shown_set.add(worn[naked_name][-1])
+                if worn[naked_name][-1].attributes.get("seethru"):
+                    string += ('%s%s|n ' % (skintone, naked_value))
             else:
-                skintone = self.db.skintone if self.attributes.has("skintone") else "|W"
-                string += ('%s%s|n ' % (skintone, value))
+                string += ('%s%s|n ' % (skintone, naked_value))
         return string
 
     def at_post_puppet(self, **kwargs):
